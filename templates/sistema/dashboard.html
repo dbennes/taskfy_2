@@ -1,0 +1,114 @@
+{% extends 'sistema/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* Apple-style minimal cards */
+  .apple-card {
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    transition: transform .15s ease-in-out;
+  }
+  .apple-card:hover {
+    transform: translateY(-2px);
+  }
+  .apple-card h1 {
+    font-size: 2.5rem;
+    margin-bottom: .25rem;
+  }
+  .apple-card p {
+    color: #666;
+    font-size: .9rem;
+  }
+</style>
+
+<div class="container-fluid py-4">
+  <!-- Top summary cards -->
+  <div class="row gx-4 mb-4">
+    <div class="col-md-4 mb-3">
+      <div class="apple-card text-center p-4 h-100">
+        <h1 class="fw-bold">{{ total_jobcards }}</h1>
+        <p>Total JobCards</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="apple-card text-center p-4 h-100">
+        <h1 class="fw-bold text-danger">{{ not_checked_count }}</h1>
+        <p>Not Checked</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="apple-card text-center p-4 h-100">
+        <h1 class="fw-bold text-success">{{ checked_count }}</h1>
+        <p>Checked</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="row gx-4">
+    <!-- Bar: Not Checked by Discipline -->
+    <div class="col-lg-6 mb-4">
+      <div class="apple-card p-3 h-100">
+        <h6 class="fw-bold text-primary">Not Checked by Discipline</h6>
+        <div style="position: relative; height:240px;">
+          <canvas id="notCheckedBar"></canvas>
+        </div>
+      </div>
+    </div>
+    <!-- Pie: Total per Discipline -->
+    <div class="col-lg-6 mb-4">
+      <div class="apple-card p-3 h-100">
+        <h6 class="fw-bold text-info">JobCards per Discipline</h6>
+        <div style="position: relative; height:240px;">
+          <canvas id="totalPie"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Not Checked Bar
+  new Chart(document.getElementById('notCheckedBar'), {
+    type: 'bar',
+    data: {
+      labels: {{ labels_not_checked|safe }},
+      datasets: [{
+        label: 'Not Checked',
+        data: {{ data_not_checked|safe }},
+        backgroundColor: '#e74a3b'
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // Total Pie
+  new Chart(document.getElementById('totalPie'), {
+    type: 'pie',
+    data: {
+      labels: {{ labels_total|safe }},
+      datasets: [{
+        data: {{ data_total|safe }},
+        backgroundColor: [
+          '#4e73df','#1cc88a','#36b9cc',
+          '#f6c23e','#e74a3b','#858796'
+        ]
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'right' } }
+    }
+  });
+</script>
+{% endblock %}
