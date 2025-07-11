@@ -637,7 +637,7 @@ def allocated_task_list(request):
     }
     return render(request, 'sistema/allocated/allocated_task_list.html', context)
 
-#IMPORTAÇÕES PARA O BANCO
+#IMPORTAÇÕES PARA O BANCO #
 
 @csrf_exempt
 def import_materials(request):
